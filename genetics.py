@@ -98,3 +98,12 @@ for i in range(1,len(generations)):
 
 for mate in uniqueMates:
     mate.printOut()
+
+# compares the number of repeats represented by uniqueMates to the total number of all mates in the list generations
+repeats = 0
+total = 0
+for mate in uniqueMates:
+    repeats+=mate.count
+for generation in generations:
+    total += len(generation)
+print("The percentage of repeats is: " + "{:.2f}".format(float(repeats)/float(total)) + "%")
