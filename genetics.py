@@ -49,3 +49,11 @@ def generateGeneration(lastGen: []) -> []:
     return nextGen
 gen1=generateGeneration(gen0)
 print (gen1)
+gen2=generateGeneration(gen1)
+print(gen2)
+gen3=generateGeneration(gen2)
+print(gen3)
+gen4=generateGeneration(gen3)
+print(gen4)
+gen5=generateGeneration(gen4)
+print(gen5)
