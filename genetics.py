@@ -5,29 +5,27 @@ class Mates:
     def __init__(self,atr1: str, atr2: str) :
         self.atr1 = atr1
         self.atr2 = atr2
+        self.count=0
     def __repr__(self):
         return self.atr1 + self.atr2
     def __str__(self):
         return "Mates"
+    def countUp(self):
+        self.count+=1
 
-#the list holding the originals
-gen0 = []
+generations = []
+generations.append([])
 
 #reading the files of the atribute markers
 with open('genes.txt') as f:
     contents = f.readlines()
     for line in contents :
         atrs = line.split()
-        gen0.append(Mates(atrs[0], atrs[1]))
+        generations[0].append(Mates(atrs[0], atrs[1]))
         print(atrs)
-    print(gen0)
+    print(generations[0])
 
-#the five generations generated
-gen1 = []
-gen2 = []
-gen3 = []
-gen4 = []
-gen5 = []
+
 
 def generateGeneration(lastGen: []) -> []:
     nextGen = []
@@ -47,13 +45,9 @@ def generateGeneration(lastGen: []) -> []:
     nextGen.append(Mates(parent1.atr2, parent2.atr1))
 
     return nextGen
-gen1=generateGeneration(gen0)
-print (gen1)
-gen2=generateGeneration(gen1)
-print(gen2)
-gen3=generateGeneration(gen2)
-print(gen3)
-gen4=generateGeneration(gen3)
-print(gen4)
-gen5=generateGeneration(gen4)
-print(gen5)
+
+for i in range(5):
+    generations.append(generateGeneration(generations[-1]))
+print(generations)
+
+#def
