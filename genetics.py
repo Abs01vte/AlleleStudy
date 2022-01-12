@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+import sys
+
 # This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation,
 #either version 3 of the License, or (at your option) any later version.
 #
@@ -76,20 +79,32 @@ def generateGeneration(lastGen: []) -> []:
 
     return nextGen
 
+numGenerations = 5
+genesFile = "genes.txt"
 
+for i in range(1, len(sys.argv)):
+    arg = sys.argv[i]
+    argc = len(sys.argv) - 1
+    match arg:
+        case "--num-gens":
+            if i == argc:
+                raise ValueError("No number given for --num-gens")
+            numGenerations = int(sys.argv[i + 1])
+        case "--file":
+            if i == argc:
+                raise ValueError("No file path given for --file")
+            genesFile = sys.argv[i + 1]
+            
 
 #reading the files of the atribute markers
-with open('genes.txt') as f:
+with open(genesFile) as f:
     contents = f.readlines()
     for line in contents :
         atrs = line.split()
         generations[0].append(Mates(atrs[0], atrs[1]))
 
 
-
-
-
-for i in range(5):
+for i in range(numGenerations):
     generations.append(generateGeneration(generations[-1]))
 
 
@@ -100,6 +115,7 @@ for mate in uniqueMates:
     mate.printOut()
 
 # compares the number of repeats represented by uniqueMates to the total number of all mates in the list generations
+# TODO bug, if generations is 6 then the number of repeats is at 118%.
 repeats = 0
 total = 0
 for mate in uniqueMates:
