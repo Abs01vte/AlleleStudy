@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import copy
 
 # This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation,
 #either version 3 of the License, or (at your option) any later version.
@@ -19,9 +20,14 @@ import sys
 #class of individuals for carrying markers
 class Mates:
     def __init__(self,atr1: str, atr2: str) :
-        self.atr1 = atr1
-        self.atr2 = atr2
+        if atr2.isupper():
+             self.atr2 = atr1
+             self.atr1 = atr2
+        else:
+            self.atr1 = atr1
+            self.atr2 = atr2
         self.count=0
+
     def __repr__(self):
         return self.atr1 + self.atr2 + ": " + str(self.count)
     def __str__(self):
@@ -39,6 +45,7 @@ generations = []
 generations.append([])
 uniqueMates = []
 
+
 def incrementMate(mate: Mates):
     for each in uniqueMates:
         if each == mate:
@@ -48,14 +55,16 @@ def incrementMate(mate: Mates):
     uniqueMates.append(mate)
 
 # counts the number of similarities to previous generations
+
 def compareGens(genIndex: int):
-    genI = generations[genIndex]
-    for i in range(genIndex):
-        curGen = generations[i]
-        for mate in genI:
-            for curGenMate in curGen:
-                if mate == curGenMate:
-                    incrementMate(mate)
+    genI = copy.deepcopy(generations[genIndex])
+    genPrev = copy.deepcopy(generations[genIndex-1])
+    for m in reversed(genI):
+        for m2 in reversed(genPrev):
+            if m == m2:
+                incrementMate(m)
+                genPrev.remove(m2)
+        genI.remove(m)
 
 
 
@@ -67,15 +76,15 @@ def generateGeneration(lastGen: []) -> []:
         parent2 = lastGen[i+1]
 
         nextGen.append(Mates(parent1.atr1, parent2.atr1))
-        nextGen.append(Mates(parent1.atr2, parent2.atr1))
         nextGen.append(Mates(parent1.atr1, parent2.atr2))
+        nextGen.append(Mates(parent1.atr2, parent2.atr1))
         nextGen.append(Mates(parent1.atr2, parent2.atr2))
     parent1 = lastGen[-1]
     parent2 = lastGen[0]
-    nextGen.append(Mates(parent1.atr1, parent2.atr2))
     nextGen.append(Mates(parent1.atr1, parent2.atr1))
-    nextGen.append(Mates(parent1.atr2, parent2.atr2))
+    nextGen.append(Mates(parent1.atr1, parent2.atr2))
     nextGen.append(Mates(parent1.atr2, parent2.atr1))
+    nextGen.append(Mates(parent1.atr2, parent2.atr2))
 
     return nextGen
 
@@ -94,7 +103,7 @@ for i in range(1, len(sys.argv)):
             if i == argc:
                 raise ValueError("No file path given for --file")
             genesFile = sys.argv[i + 1]
-            
+
 
 #reading the files of the atribute markers
 with open(genesFile) as f:
@@ -115,11 +124,10 @@ for mate in uniqueMates:
     mate.printOut()
 
 # compares the number of repeats represented by uniqueMates to the total number of all mates in the list generations
-# TODO bug, if generations is 6 then the number of repeats is at 118%.
 repeats = 0
 total = 0
 for mate in uniqueMates:
-    repeats+=mate.count
+    repeats += mate.count - 1
 for generation in generations:
     total += len(generation)
-print("The percentage of repeats is: " + "{:.2f}".format(float(repeats)/float(total)) + "%")
+print("The percentage of repeats is: " + "{:.2f}".format(float(repeats)/float(total)*100) + "%")
