@@ -4,10 +4,10 @@ import sys
 import copy
 
 # This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation,
-#either version 3 of the License, or (at your option) any later version.
+# either version 3 of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#See the GNU General Public License for more details.
+# See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
@@ -39,6 +39,22 @@ class Mates:
     def printOut(self):
         if self.count>1:
             print(self)
+    def  __lt__(self, other):
+        if self.atr1.islower():
+            if self.atr1 < other.atr1.lower():
+                return True
+            return False
+        if other.atr1.islower():
+            if other.atr1 < self.atr1.lower():
+                return False
+            return True
+        if self.atr1 < other.atr1 and self.atr2 < other.atr2:
+            return True
+        if self.atr1 < other.atr1:
+            return True
+
+        return False
+
 
 #holder of the generations
 generations = []
@@ -88,6 +104,10 @@ def generateGeneration(lastGen: []) -> []:
 
     return nextGen
 
+def organize():
+    uniqueMates.sort()
+
+
 numGenerations = 5
 genesFile = "genes.txt"
 
@@ -107,9 +127,11 @@ for i in range(1, len(sys.argv)):
 
 #reading the files of the atribute markers
 with open(genesFile) as f:
+    numLinesFile = 0
     contents = f.readlines()
     for line in contents :
         atrs = line.split()
+        numLinesFile+=1
         generations[0].append(Mates(atrs[0], atrs[1]))
 
 
@@ -119,6 +141,8 @@ for i in range(numGenerations):
 
 for i in range(1,len(generations)):
     compareGens(i)
+
+organize()
 
 for mate in uniqueMates:
     mate.printOut()
@@ -131,3 +155,4 @@ for mate in uniqueMates:
 for generation in generations:
     total += len(generation)
 print("The percentage of repeats is: " + "{:.2f}".format(float(repeats)/float(total)*100) + "%")
+print("The average possible is: {}".format((numLinesFile*2)*(numGenerations)))
