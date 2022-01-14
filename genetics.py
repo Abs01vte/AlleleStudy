@@ -95,14 +95,12 @@ def generateGeneration(lastGen: []) -> []:
         nextGen.append(Mates(parent1.atr1, parent2.atr2))
         nextGen.append(Mates(parent1.atr2, parent2.atr1))
         nextGen.append(Mates(parent1.atr2, parent2.atr2))
-
     parent1 = lastGen[-1]
     parent2 = lastGen[0]
     nextGen.append(Mates(parent1.atr1, parent2.atr1))
     nextGen.append(Mates(parent1.atr1, parent2.atr2))
     nextGen.append(Mates(parent1.atr2, parent2.atr1))
     nextGen.append(Mates(parent1.atr2, parent2.atr2))
-
 
     return nextGen
 
@@ -132,7 +130,7 @@ with open(genesFile) as f:
     numLinesFile = 0
     contents = f.readlines()
     for line in contents :
-        atrs = line.split()
+        atrs = line
         numLinesFile+=1
         generations[0].append(Mates(atrs[0], atrs[1]))
 
@@ -153,9 +151,8 @@ for mate in uniqueMates:
 repeats = 0
 total = 0
 for mate in uniqueMates:
-    repeats += mate.count
+    repeats += mate.count - 1
 for generation in generations:
-    total += len(generation) -1
-print("Out of " + str(total) + "there are " + str(repeats) + "repeats.")
+    total += len(generation)
 print("The percentage of repeats is: " + "{:.2f}".format(float(repeats)/float(total)*100) + "%")
 print("The average possible is: {}".format((numLinesFile*2)*(numGenerations)))
